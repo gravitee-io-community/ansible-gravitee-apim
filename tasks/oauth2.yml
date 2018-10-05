@@ -1,0 +1,61 @@
+---
+- assert:
+    that:
+      - "gravitee_api_auth_url is defined and gravitee_api_auth_url|length > 0"
+      - "gravitee_api_client_id is defined and gravitee_api_client_id|length > 0"
+      - "gravitee_api_oauth2_user is defined and gravitee_api_oauth2_user|length > 0"
+      - "gravitee_api_oauth2_pwd is defined and gravitee_api_oauth2_pwd|length > 0"
+
+- name: Initiate Oauth2 Authentication process
+  block:
+    - name: "Get access token from Auth_server thanks to Password grant type flow"
+      uri:
+         url: "{{gravitee_api_auth_url}}"
+         method: POST
+         user: "{{gravitee_api_client_id}}"
+         password: "{{gravitee_api_client_pwd}}"
+         force_basic_auth: yes
+         body: "password={{gravitee_api_oauth2_pwd}}&grant_type=password&username={{gravitee_api_oauth2_user}}"
+         headers:
+           Content-type: "application/x-www-form-urlencoded"
+      register: auth_result
+
+    - name: "Exchange Oauth2 access token"
+      gravitee_gateway:
+         url: "{{gravitee_api_url}}"
+         access_token: "{{auth_result.json.access_token}}"
+      register: exchange_token_result
+
+    - name: "set gravitee jwt token"
+      set_fact: gravitee_api_token="{{exchange_token_result.token}}"
+  when: gravitee_api_token is not defined
+
+- name: "Create new API"
+  gravitee_gateway:
+    url: "{{gravitee_api_url}}"
+    token: "{{gravitee_api_token}}"
+    state: "{{gravitee_api_state}}"
+    visibility: "{{gravitee_api_visibility}}"
+    transfer_ownership: "{{gravitee_api_transfer_ownership}}"
+    config: "{{gravitee_api_config}}"
+    pages: "{{gravitee_api_pages}}"
+    plans: "{{gravitee_api_plans}}"
+  when: gravitee_api_id is not defined
+  register: api_created
+
+- name: "set created api id"
+  set_fact: api_id="{{api_created.api_id}}"
+  when: api_created is changed
+
+- name: "Update API"
+  gravitee_gateway:
+    url: "{{gravitee_api_url}}"
+    api_id: "{{gravitee_api_id}}"
+    token: "{{gravitee_api_token}}"
+    state: "{{gravitee_api_state}}"
+    visibility: "{{gravitee_api_visibility}}"
+    transfer_ownership: "{{gravitee_api_transfer_ownership}}"
+    config: "{{gravitee_api_config}}"
+    pages: "{{gravitee_api_pages}}"
+    plans: "{{gravitee_api_plans}}"
+  when: gravitee_api_id is defined

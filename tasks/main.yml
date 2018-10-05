@@ -1,0 +1,7 @@
+---
+- assert:
+    that:
+      - "gravitee_api_url is defined and gravitee_api_url|length > 0"
+
+- include_tasks: "{{gravitee_api_auth_method}}.yml"
+  tags: manage

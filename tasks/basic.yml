@@ -1,0 +1,37 @@
+---
+- assert:
+    that:
+      - "gravitee_api_user is defined and gravitee_api_user|length > 0"
+      - "gravitee_api_password is defined and gravitee_api_password|length > 0"
+
+- name: "Create new API"
+  gravitee_gateway:
+    url: "{{gravitee_api_url}}"
+    user: "{{gravitee_api_user}}"
+    password: "{{gravitee_api_password}}"
+    state: "{{gravitee_api_state}}"
+    transfer_ownership: "{{gravitee_api_transfer_ownership}}"
+    visibility: "{{gravitee_api_visibility}}"
+    config: "{{gravitee_api_config}}"
+    pages: "{{gravitee_api_pages}}"
+    plans: "{{gravitee_api_plans}}"
+  when: gravitee_api_id is not defined
+  register: api_created
+
+- name: "set created api id"
+  set_fact: api_id="{{api_created.api_id}}"
+  when: api_created is changed
+
+- name: "Update API"
+  gravitee_gateway:
+    url: "{{gravitee_api_url}}"
+    api_id: "{{gravitee_api_id}}"
+    user: "{{gravitee_api_user}}"
+    password: "{{gravitee_api_password}}"
+    state: "{{gravitee_api_state}}"
+    transfer_ownership: "{{gravitee_api_transfer_ownership}}"
+    visibility: "{{gravitee_api_visibility}}"
+    config: "{{gravitee_api_config}}"
+    pages: "{{gravitee_api_pages}}"
+    plans: "{{gravitee_api_plans}}"
+  when: gravitee_api_id is defined

@@ -1,0 +1,26 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure(2) do |config|
+  config.vm.box = "centos/7"
+  config.vm.synced_folder "../../../", "/vagrant", type: "virtualbox", owner: "vagrant", mount_options: ["dmode=775,fmode=600"]
+  config.vbguest.auto_update = true
+
+  config.vm.define "ansible-master" do |master|
+      master.vm.hostname = "ansible-master"
+      master.vm.network :private_network, ip: "192.168.51.10"
+      master.vm.provision "shell", path: "provision-node.sh"
+      master.vm.provision "ansible_local" do |deploy_api|
+        deploy_api.playbook = "tests/playbook-basic.yml"
+        deploy_api.config_file = "/vagrant/tests/ansible.cfg"
+        deploy_api.limit = "all"
+        deploy_api.install = true
+        deploy_api.verbose = true
+      end
+      master.vm.provider "virtualbox" do |v|
+        v.memory = 512
+        v.name = "ansible-master"
+       end
+  end
+
+end

@@ -1,0 +1,8 @@
+---
+gravitee_api_auth_method: "basic"
+gravitee_api_state: started
+gravitee_api_visibility: PRIVATE
+gravitee_api_transfer_ownership: {}
+gravitee_api_config: {}
+gravitee_api_pages: []
+gravitee_api_plans: []

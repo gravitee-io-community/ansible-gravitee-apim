@@ -1,0 +1,34 @@
+- name: Api management with gravitee gateway ansible module
+  connection: local
+  hosts: localhost
+  vars:
+    gravitee_api_url: https://manage-api.foo.com
+    gravitee_api_user: admin
+    gravitee_api_password: admin
+    gravitee_api_visibility: PUBLIC
+  tasks:
+  # Create the API
+    - include_role: name="gravitee.api"
+      vars:
+        gravitee_api_transfer_ownership:
+          user: admin
+          owner_role: OWNER
+        gravitee_api_config: "{{ lookup('template', playbook_dir + '/resources/create.json') }}"
+        gravitee_api_pages:
+          - "{{ lookup('template', playbook_dir + '/resources/page-swagger.json') }}"
+        gravitee_api_plans:
+          - "{{ lookup('template', playbook_dir + '/resources/plan-keyless.json') }}"
+
+  # Update the documentation of the API
+    - include_role: name="gravitee.api"
+      vars:
+        gravitee_api_id: "{{api_id}}"
+        gravitee_api_pages:
+          - "{{ lookup('template', playbook_dir + '/resources/page-swagger.json') }}"
+          - "{{ lookup('template', playbook_dir + '/resources/page-swagger.json') }}"
+
+  # Remove the API
+    - include_role: name="gravitee.api"
+      vars:
+        gravitee_api_state: absent
+        gravitee_api_id: "{{api_id}}"

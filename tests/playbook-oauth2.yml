@@ -1,0 +1,39 @@
+- name: Api management with gravitee gateway ansible module
+  connection: local
+  hosts: localhost
+  vars:
+    gravitee_api_auth_url: https://www.sso.foo.com/auth/realms/developer_community/protocol/openid-connect/token
+    gravitee_api_url: https://manage-api.foo.com
+    gravitee_api_client_id: ansible
+    gravitee_api_client_pwd: ""
+    gravitee_api_oauth2_user: foo
+    gravitee_api_oauth2_pwd: "foo"
+    gravitee_api_auth_method: "oauth2"
+  tasks:
+  # Create the API
+    - include_role: name="gravitee.api"
+      vars:
+        gravitee_api_visibility: PUBLIC
+        gravitee_api_transfer_ownership:
+          user: admin
+          owner_role: OWNER
+        gravitee_api_config: "{{ lookup('template', playbook_dir + '/resources/create.json') }}"
+        gravitee_api_pages:
+          - "{{ lookup('template', playbook_dir + '/resources/page-swagger.json') }}"
+        gravitee_api_plans:
+          - "{{ lookup('template', playbook_dir + '/resources/plan-keyless.json') }}"
+
+  # Update the documentation of the API
+    - include_role: name="gravitee.api"
+      vars:
+        gravitee_api_visibility: PUBLIC
+        gravitee_api_id: "{{api_id}}"
+        gravitee_api_pages:
+          - "{{ lookup('template', playbook_dir + '/resources/page-swagger.json') }}"
+          - "{{ lookup('template', playbook_dir + '/resources/page-swagger.json') }}"
+
+  # Remove the API
+    - include_role: name="gravitee.api"
+      vars:
+        gravitee_api_state: absent
+        gravitee_api_id: "{{api_id}}"
