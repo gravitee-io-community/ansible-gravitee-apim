@@ -11,7 +11,7 @@
     gravitee_api_auth_method: "oauth2"
   tasks:
   # Create the API
-    - include_role: name="gravitee.api"
+    - include_role: name="ansible-gravitee-apim"
       vars:
         gravitee_api_visibility: PUBLIC
         gravitee_api_transfer_ownership:
@@ -24,7 +24,7 @@
           - "{{ lookup('template', playbook_dir + '/resources/plan-keyless.json') }}"
 
   # Update the documentation of the API
-    - include_role: name="gravitee.api"
+    - include_role: name="ansible-gravitee-apim"
       vars:
         gravitee_api_visibility: PUBLIC
         gravitee_api_id: "{{api_id}}"
@@ -33,7 +33,7 @@
           - "{{ lookup('template', playbook_dir + '/resources/page-swagger.json') }}"
 
   # Remove the API
-    - include_role: name="gravitee.api"
+    - include_role: name="ansible-gravitee-apim"
       vars:
         gravitee_api_state: absent
         gravitee_api_id: "{{api_id}}"

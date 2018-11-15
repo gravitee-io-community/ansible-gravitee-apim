@@ -1,5 +1,6 @@
 galaxy_info:
   author: fabrice.mercier
+#  role_name: gravitee_mgnt_api
   description: Ansible role for manage API in Gravitee.io APIM
   company: GraviteeSource
 

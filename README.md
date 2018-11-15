@@ -1,4 +1,4 @@
-## Gravitee.api Ansible Role
+## Gravitee api management Ansible Role
 
 ### Global description
 
@@ -111,7 +111,7 @@ For Basic authent :
     gravitee_api_visibility: PUBLIC
   tasks:
   # Create the API
-    - include_role: name="gravitee.api"
+    - include_role: name="ansible-gravitee-apim"
       vars:
         gravitee_api_transfer_ownership:
           user: admin
@@ -123,7 +123,7 @@ For Basic authent :
           - "{{ lookup('template', playbook_dir + '/resources/plan-keyless.json') }}"
 
   # Update the documentation of the API
-    - include_role: name="gravitee.api"
+    - include_role: name="ansible-gravitee-apim"
       vars:
         gravitee_api_id: "{{api_id}}"
         gravitee_api_pages:
@@ -131,7 +131,7 @@ For Basic authent :
           - "{{ lookup('template', playbook_dir + '/resources/page-swagger.json') }}"
 
   # Remove the API
-    - include_role: name="gravitee.api"
+    - include_role: name="ansible-gravitee-apim"
       vars:
         gravitee_api_state: absent
         gravitee_api_id: "{{api_id}}"
@@ -154,7 +154,7 @@ For oauth2 authent :
     gravitee_api_auth_method: "oauth2"
   tasks:
   # Create the API
-    - include_role: name="gravitee.api"
+    - include_role: name="ansible-gravitee-apim"
       vars:
         gravitee_api_visibility: PUBLIC
         gravitee_api_config: "{{ lookup('template', playbook_dir + '/resources/create.json') }}"
@@ -164,7 +164,7 @@ For oauth2 authent :
           - "{{ lookup('template', playbook_dir + '/resources/plan-keyless.json') }}"
 
   # Update the documentation of the API
-    - include_role: name="gravitee.api"
+    - include_role: name="ansible-gravitee-apim"
       vars:
         gravitee_api_visibility: PUBLIC
         gravitee_api_id: "{{api_id}}"
@@ -173,7 +173,7 @@ For oauth2 authent :
           - "{{ lookup('template', playbook_dir + '/resources/page-swagger.json') }}"
 
   # Remove the API
-    - include_role: name="gravitee.api"
+    - include_role: name="ansible-gravitee-apim"
       vars:
         gravitee_api_state: absent
         gravitee_api_id: "{{api_id}}"
