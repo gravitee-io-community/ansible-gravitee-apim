@@ -76,6 +76,9 @@ For Auth2 method :
 * `gravitee_api_auth_url`:
     * Url for auth endpoint
     * Default value : `None`
+* `gravitee_api_auth_resource_id`:
+    * Authentication resource name configured into Gravitee APIM
+    * Default value : `None`
 * `gravitee_api_client_id`:
     * Oauth2 client id
     * Default value : `None`
@@ -152,6 +155,7 @@ For oauth2 authent :
     gravitee_api_oauth2_user: user
     gravitee_api_oauth2_pwd: "pwd"
     gravitee_api_auth_method: "oauth2"
+    gravitee_api_auth_resource_id: keycloak_cluster
   tasks:
   # Create the API
     - include_role: name="ansible-gravitee-apim"

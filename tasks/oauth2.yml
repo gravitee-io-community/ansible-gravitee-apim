@@ -5,7 +5,8 @@
       - "gravitee_api_client_id is defined and gravitee_api_client_id|length > 0"
       - "gravitee_api_oauth2_user is defined and gravitee_api_oauth2_user|length > 0"
       - "gravitee_api_oauth2_pwd is defined and gravitee_api_oauth2_pwd|length > 0"
-
+      - "gravitee_api_auth_resource_id is defined and gravitee_api_auth_resource_id|length > 0"
+      -
 - name: Initiate Oauth2 Authentication process
   block:
     - name: "Get access token from Auth_server thanks to Password grant type flow"
@@ -23,6 +24,7 @@
     - name: "Exchange Oauth2 access token"
       gravitee_gateway:
          url: "{{gravitee_api_url}}"
+         auth_resource_id: "{{gravitee_api_auth_resource_id}}"
          access_token: "{{auth_result.json.access_token}}"
       register: exchange_token_result
 

@@ -8,6 +8,7 @@
     gravitee_api_client_pwd: ""
     gravitee_api_oauth2_user: foo
     gravitee_api_oauth2_pwd: "foo"
+    gravitee_api_auth_resource_id: "oauth2"
     gravitee_api_auth_method: "oauth2"
   tasks:
   # Create the API

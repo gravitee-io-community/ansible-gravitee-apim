@@ -293,9 +293,10 @@ class AuthenticationWrapper(ApiGatewayWrapper):
     def __init__(self, module):
         ApiGatewayWrapper.__init__(self, module)
         self.token = self.module.params.get('access_token')
+        self.auth_resource_id = self.module.params.get('auth_resource_id')
 
     def exchange_token(self):
-        result = self.request('{}/auth/oauth2/exchange?token={}'.format(self.api_path, self.token), 'POST')['response_body']
+        result = self.request('{}/auth/oauth2/{}/exchange?token={}'.format(self.api_path, self.auth_resource_id, self.token), 'POST')['response_body']
         token = result['token']
         self.module.result['token'] = token
         return token
@@ -497,6 +498,8 @@ class ApiWrapper(ApiGatewayWrapper):
         if len(result) != 1:
             self.module.fail_json(msg="transfer ownership expect only one user or existing user")
         data = {'role': self.transfer_ownership['owner_role'], 'reference': result[0]['reference']}
+        if "id" in result[0]:
+            data['id'] = result[0]['id']
         self.request('{}/apis/{}/members/transfer_ownership'.format(self.api_path, self.api_id), 'POST', data)
         self.module.result['changed'] = True
 
@@ -547,6 +550,7 @@ def run_module():
         url_username=dict(required=False, aliases=['user']),
         url_password=dict(required=False, aliases=['password'], no_log=True),
         access_token=dict(required=False, no_log=True),
+        auth_resource_id=dict(required=False),
         token=dict(required=False, no_log=True),
         state=dict(choices=['present', 'absent', 'started', 'stopped'], required=False),
         visibility=dict(choices=['PRIVATE', 'PUBLIC'], required=False, default='PRIVATE'),
