@@ -433,8 +433,8 @@ class ApiWrapper(ApiGatewayWrapper):
         if self.visibility != 'PRIVATE':
             update_data = result['response_body']
             update_data['visibility'] = self.visibility
-            for x in ['created_at', 'updated_at', 'state', 'owner', 'id']:
-                del update_data[x]
+            for x in ['created_at', 'updated_at', 'state', 'owner', 'id', 'workflow_state']:
+                update_data.pop(x, None)
             self.api_entity = update_data
             self.update_api_entity()
 
